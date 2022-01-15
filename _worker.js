@@ -8,6 +8,7 @@ function handleWebSocket(request) {
   const [client, server] = Object.values(webSocketPair);
 
   server.accept();
+  new HeartBeatManager({}, server)
   server.addEventListener("message", (event) => {
     console.log(event.data);
     server.send("PONG");
@@ -38,31 +39,36 @@ export class HeartBeatManager {
     this.checkMilliseconds = checkMilliseconds;
     this.timeoutMilliseconds = timeoutMilliseconds;
     this.checkIntervalID = setInterval(
-      () => heartBeatCheck(),
+      () => this.heartBeatCheck(),
       checkMilliseconds
     );
+    this.heartBeatLastReceivedTime = new Date().getTime();
 
-    webSocket.addEventListener("message", (event) => {
-      message = JSON.parse(event.data);
-      if (message["type"] === "PING") {
-        heartBeatReceived();
-      }
+    this.webSocket = webSocket
+
+    this.webSocket.addEventListener("message", (event) => {
+      try {
+        let message = JSON.parse(event.data);
+        if (message["type"] === "PING") {
+          this.heartBeatReceived();
+        }
+      } catch(e) { }
     });
+
+    this.webSocket.addEventListener("close", (event) => clearInterval(this.checkIntervalID));
   }
 
   heartBeatReceived() {
+    console.log(`Heartbeat received from ${this.webSocket}`);
     this.heartBeatLastReceivedTime = new Date().getTime();
-    this.game.markPlayerAlive();
+    // this.game.markPlayerAlive();
   }
 
   heartBeatCheck() {
     let now = new Date().getTime();
     if (now - this.heartBeatLastReceivedTime > this.timeoutMilliseconds) {
-      this.game.markPlayerDead();
+      // this.game.markPlayerDead();
+      console.log(`${this.webSocket} is dead`)
     }
-  }
-
-  destroy() {
-    clearInterval(this.checkIntervalID)
   }
 }
