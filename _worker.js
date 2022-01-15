@@ -37,7 +37,7 @@ export class HeartBeatManager {
     this.game = game;
     this.checkMilliseconds = checkMilliseconds;
     this.timeoutMilliseconds = timeoutMilliseconds;
-    this.checkIntervalId = setInterval(
+    this.checkIntervalID = setInterval(
       () => heartBeatCheck(),
       checkMilliseconds
     );
@@ -60,5 +60,9 @@ export class HeartBeatManager {
     if (now - this.heartBeatLastReceivedTime > this.timeoutMilliseconds) {
       this.game.markPlayerDead();
     }
+  }
+
+  destroy() {
+    clearInterval(this.checkIntervalID)
   }
 }
