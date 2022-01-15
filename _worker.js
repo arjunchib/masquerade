@@ -31,3 +31,38 @@ export default {
     return env.ASSETS.fetch(request);
   },
 };
+
+export class HeartBeatManager {
+  constructor(game, webSocket, timeoutSeconds, checkMilliseconds) {
+    this.game = game;
+    this.checkSeconds = checkSeconds;
+    this.timeoutSeconds = timeoutSeconds;
+    this.checkIntervalId = setInterval(
+      () => heartBeatCheck(),
+      checkMilliseconds
+    );
+
+    webSocket.addEventListener("message", (event) => {
+      message = JSON.parse(event.data);
+      if (message["type"] === "PING") {
+        heartBeatReceived();
+      }
+    });
+  }
+
+  heartBeatReceived() {
+    this.heartBeatLastReceivedTime = new Date().getTime();
+    this.game.playerAlive();
+  }
+
+  heartBeatCheck() {
+    let now = new Date().getTime();
+    if (now - this.heartBeatLastReceivedTime > this.timeoutSeconds) {
+      this.game.playerDead();
+    }
+  }
+
+  close() {
+    
+  }
+}
