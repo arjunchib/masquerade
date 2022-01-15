@@ -1,11 +1,26 @@
-import React from "react";
-import "./App.css";
+import { Component, createRef } from "react";
 
-class App extends React.Component {
+class App extends Component {
+  roomId;
   websocket;
 
-  componentDidMount() {
-    this.websocket = new WebSocket("ws://127.0.0.1:8788/new/");
+  constructor(props) {
+    super(props);
+    this.roomId = createRef();
+  }
+
+  async newRoom() {
+    const res = await fetch("/.functions/room", { method: "POST" });
+    this.joinRoom(await res.text());
+  }
+
+  async joinRoom(id) {
+    this.websocket?.close();
+    console.log(process.env.CF_PAGES);
+    const proto = window.location.protocol === "https:" ? "wss:" : "ws:";
+    this.websocket = new WebSocket(
+      `${proto}//${window.location.host}/.functions/room/${id}/websocket`
+    );
     this.websocket?.addEventListener("message", (event) => {
       console.log("Message received from server");
       console.log(event.data);
@@ -19,7 +34,18 @@ class App extends React.Component {
   render() {
     return (
       <div className="App">
-        <button onClick={() => this.websocket?.send("PING")}>Ping</button>
+        <button onClick={() => this.newRoom()}>New Room</button>
+        <input type="text" placeholder="Room ID" ref={this.roomId}></input>
+        <button onClick={() => this.joinRoom(this.roomId.current.value)}>
+          Join Room
+        </button>
+        <button
+          onClick={() => {
+            this.websocket?.send("ping");
+          }}
+        >
+          Ping
+        </button>
       </div>
     );
   }
