@@ -36,15 +36,15 @@ export default {
 export class HeartBeatManager {
   constructor(game, webSocket, checkMilliseconds = 3000, timeoutMilliseconds = 30000) {
     this.game = game;
+    this.webSocket = webSocket
     this.checkMilliseconds = checkMilliseconds;
     this.timeoutMilliseconds = timeoutMilliseconds;
+    this.heartBeatLastReceivedTime = new Date().getTime();
+    
     this.checkIntervalID = setInterval(
       () => this.heartBeatCheck(),
       checkMilliseconds
     );
-    this.heartBeatLastReceivedTime = new Date().getTime();
-
-    this.webSocket = webSocket
 
     this.webSocket.addEventListener("message", (event) => {
       try {
