@@ -10,6 +10,7 @@ class App extends React.Component {
       console.log("Message received from server");
       console.log(event.data);
     });
+    setInterval(() => this.websocket?.send('{"type": "PING"}'), 3000)
   }
 
   componentWillUnmount() {
