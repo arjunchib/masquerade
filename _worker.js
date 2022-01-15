@@ -33,10 +33,10 @@ export default {
 };
 
 export class HeartBeatManager {
-  constructor(game, webSocket, timeoutSeconds, checkMilliseconds) {
+  constructor(game, webSocket, checkMilliseconds = 300, timeoutMilliseconds = 30000) {
     this.game = game;
     this.checkSeconds = checkSeconds;
-    this.timeoutSeconds = timeoutSeconds;
+    this.timeoutMilliseconds = timeoutMilliseconds;
     this.checkIntervalId = setInterval(
       () => heartBeatCheck(),
       checkMilliseconds
@@ -52,17 +52,13 @@ export class HeartBeatManager {
 
   heartBeatReceived() {
     this.heartBeatLastReceivedTime = new Date().getTime();
-    this.game.playerAlive();
+    this.game.markPlayerAlive();
   }
 
   heartBeatCheck() {
     let now = new Date().getTime();
-    if (now - this.heartBeatLastReceivedTime > this.timeoutSeconds) {
-      this.game.playerDead();
+    if (now - this.heartBeatLastReceivedTime > this.timeoutMilliseconds) {
+      this.game.markPlayerDead();
     }
-  }
-
-  close() {
-    
   }
 }
