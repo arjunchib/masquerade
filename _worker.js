@@ -33,9 +33,9 @@ export default {
 };
 
 export class HeartBeatManager {
-  constructor(game, webSocket, checkMilliseconds = 300, timeoutMilliseconds = 30000) {
+  constructor(game, webSocket, checkMilliseconds = 3000, timeoutMilliseconds = 30000) {
     this.game = game;
-    this.checkSeconds = checkSeconds;
+    this.checkMilliseconds = checkMilliseconds;
     this.timeoutMilliseconds = timeoutMilliseconds;
     this.checkIntervalId = setInterval(
       () => heartBeatCheck(),
