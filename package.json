@@ -16,7 +16,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "dev": "wrangler pages dev -- npx react-scripts start"
+    "dev": "wrangler pages dev -l -o rooms=GameRoom -- npx react-scripts start"
   },
   "eslintConfig": {
     "extends": [
