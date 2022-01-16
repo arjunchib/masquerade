@@ -1,5 +1,8 @@
 import { Component, createRef } from "react";
 
+const host = process.env.REACT_APP_WORKERS_HOST;
+const isSecure = window.location.protocol === "https:";
+
 class App extends Component {
   roomId;
   websocket;
@@ -10,16 +13,18 @@ class App extends Component {
   }
 
   async newRoom() {
-    const res = await fetch("/.functions/room", { method: "POST" });
+    const proto = isSecure ? "https:" : "http:";
+    const res = await fetch(`${proto}//${host}/.functions/room`, {
+      method: "POST",
+    });
     this.joinRoom(await res.text());
   }
 
   async joinRoom(id) {
     this.websocket?.close();
-    console.log(process.env.CF_PAGES);
-    const proto = window.location.protocol === "https:" ? "wss:" : "ws:";
+    const proto = isSecure ? "wss:" : "ws:";
     this.websocket = new WebSocket(
-      `${proto}//${window.location.host}/.functions/room/${id}/websocket`
+      `${proto}//${host}/.functions/room/${id}/websocket`
     );
     this.websocket?.addEventListener("message", (event) => {
       console.log("Message received from server");
