@@ -10,10 +10,12 @@ class App extends React.Component {
       console.log("Message received from server");
       console.log(event.data);
     });
+    this.heartBeatIntervalId = setInterval(() => this.websocket?.send('{"type": "PING"}'), 3000)
   }
 
   componentWillUnmount() {
     this.websocket?.close();
+    clearInterval(this.heartBeatIntervalId)
   }
 
   render() {
