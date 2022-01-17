@@ -1,4 +1,5 @@
 const MIN_PLAYER = 6;
+export { GameRoom } from "./GameRoom";
 
 // eslint-disable-next-line import/no-anonymous-default-export
 export default {
@@ -6,15 +7,11 @@ export default {
     let url = new URL(request.url);
     let path = url.pathname.slice(1).split("/");
 
-    if (!path[0]) {
-      return env.ASSETS.fetch(request);
-    }
-
     switch (path[0]) {
       case ".functions":
         return handleApiRequest(path.slice(1), request, env);
       default:
-        return env.ASSETS.fetch(request);
+        return new Response("Not Found", { status: 404 });
     }
   },
 };
@@ -50,6 +47,7 @@ async function handleApiRequest(path, request, env) {
       return new Response("Not found", { status: 404 });
   }
 }
+<<<<<<< HEAD:_worker.js
 
 export class Bank {}
 
@@ -211,3 +209,5 @@ export class HeartBeatManager {
     }
   }
 }
+=======
+>>>>>>> 2eaee0634b8887da99c1b35c9ad6b388f3048400:workers/src/index.js
