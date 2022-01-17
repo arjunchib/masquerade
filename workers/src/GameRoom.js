@@ -1,3 +1,5 @@
+import { HeartBeatManager } from "./HeartbeatManager";
+
 export class GameRoom {
   constructor(controller, env) {
     this.sessions = [];
@@ -24,9 +26,13 @@ export class GameRoom {
 
   async handleSession(webSocket) {
     webSocket.accept();
+    new HeartBeatManager({}, webSocket);
     webSocket.addEventListener("message", (event) => {
-      console.log(event.data);
-      webSocket.send("PONG");
+      let message = JSON.parse(event.data);
+      if (message.type === "TEST") {
+        console.log("TEST Received");
+        webSocket.send("TEST ACK");
+      }
     });
   }
 }
