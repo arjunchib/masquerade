@@ -1,0 +1,27 @@
+name = "masquerade"
+type = "javascript"
+workers_dev = true
+compatibility_date = "2022-01-16"
+
+[env.staging]
+
+[build]
+command = "npm run build"
+
+[build.upload]
+dir = "dist"
+format = "modules"
+main = "./index.js"
+
+[[build.upload.rules]]
+type = "ESModule"
+globs = ["**/*.js"]
+
+[durable_objects]
+bindings = [
+  { name = "rooms", class_name = "GameRoom" }
+]
+
+[[migrations]]
+tag = "v1"
+new_classes = ["GameRoom"]
