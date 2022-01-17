@@ -4,7 +4,8 @@
   "private": true,
   "license": "MIT",
   "scripts": {
-    "publish": "npx wrangler publish",
+    "publish:prod": "npx wrangler publish",
+    "publish:staging": "npx wrangler publish",
     "build": "esbuild --bundle --sourcemap --format=esm --outdir=dist ./src/index.js",
     "dev": "miniflare --watch"
   },

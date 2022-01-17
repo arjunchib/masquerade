@@ -1,7 +1,9 @@
-name = "masquerade-game-room"
+name = "masquerade"
 type = "javascript"
 workers_dev = true
-compatibility_date = "2021-11-17"
+compatibility_date = "2022-01-16"
+
+[env.staging]
 
 [build]
 command = "npm run build"
@@ -10,6 +12,10 @@ command = "npm run build"
 dir = "dist"
 format = "modules"
 main = "./index.js"
+
+[[build.upload.rules]]
+type = "ESModule"
+globs = ["**/*.js"]
 
 [durable_objects]
 bindings = [
