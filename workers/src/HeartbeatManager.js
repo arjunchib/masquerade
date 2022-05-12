@@ -33,13 +33,13 @@ export class HeartBeatManager {
   heartBeatReceived() {
     console.log(`Heartbeat received`);
     this.heartBeatLastReceivedTime = new Date().getTime();
-    // this.game.markPlayerAlive();
+    this.game.markSessionAlive();
   }
 
   heartBeatCheck() {
     let now = new Date().getTime();
     if (now - this.heartBeatLastReceivedTime > this.timeoutMilliseconds) {
-      // this.game.markPlayerDead();
+      this.game.markSessionDead();
       console.log(`${this.webSocket} is dead`);
     }
   }
